@@ -28,7 +28,7 @@ function empty() {
   providers: [ViewManagerService]
 })
 export class VegaComponent implements OnChanges, OnDestroy {
-  @Input() spec: Spec;
+  @Input() spec?: Spec;
   @Input() options?: Options;
 
   @Input()
@@ -97,20 +97,22 @@ export class VegaComponent implements OnChanges, OnDestroy {
 
   private attach(view: View): void {
     const { cdr, container, renderer } = this;
-    const viewEl = this.getRoot(view.container());
-    const sensor = new ResizeSensor(viewEl, ({ width, height }) => {
-      this.updateSize(viewEl, view, width, height);
-    });
+    if (view.container()) {
+      const viewEl = this.getRoot(view.container()!);
+      const sensor = new ResizeSensor(viewEl, ({ width, height }) => {
+        this.updateSize(viewEl, view, width, height);
+      });
 
-    this.detach();
-    this.detach = () => {
-      sensor.detach();
-      renderer.removeChild(container, viewEl);
-      cdr.markForCheck();
-      this.detach = empty;
-    };
+      this.detach();
+      this.detach = () => {
+        sensor.detach();
+        renderer.removeChild(container, viewEl);
+        cdr.markForCheck();
+        this.detach = empty;
+      };
 
-    renderer.appendChild(container, viewEl);
+      renderer.appendChild(container, viewEl);
+    }
     cdr.markForCheck();
   }
 
