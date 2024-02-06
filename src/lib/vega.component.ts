@@ -5,7 +5,6 @@ import {
 import { ResizeSensor } from 'css-element-queries';
 import { View } from 'vega';
 import { EmbedOptions, VisualizationSpec } from 'vega-embed';
-
 import { ViewEvent, ViewManagerService } from './view-manager.service';
 
 
@@ -21,6 +20,7 @@ function empty() {
 
 
 @Component({
+  standalone: true,
   selector: 'ngx-vega',
   template: '',
   styleUrls: ['./vega.component.scss'],

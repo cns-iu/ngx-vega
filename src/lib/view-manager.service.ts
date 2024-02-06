@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { from, Observable, ReplaySubject, Subscription } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, map, pluck, shareReplay, startWith, switchAll } from 'rxjs/operators';
+import { Observable, ReplaySubject, Subscription, from } from 'rxjs';
+import { catchError, distinctUntilChanged, filter, map, shareReplay, startWith, switchAll } from 'rxjs/operators';
 import { View } from 'vega';
 import embed from 'vega-embed';
 
@@ -35,7 +35,7 @@ export class ViewManagerService implements OnDestroy {
 
   readonly view$ = this.event$.pipe(
     filter((event): event is ViewReady => event.type === 'ready'),
-    pluck('view')
+    map(x => x.view)
   );
 
   readonly loading$ = this.event$.pipe(
@@ -45,7 +45,7 @@ export class ViewManagerService implements OnDestroy {
 
   readonly error$ = this.event$.pipe(
     filter((event): event is ViewError => event.type === 'error'),
-    pluck('error')
+    map(x => x?.error)
   );
 
   ngOnDestroy(): void {
