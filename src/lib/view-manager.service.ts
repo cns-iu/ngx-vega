@@ -1,9 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject, Subscription, from } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, map, shareReplay, startWith, switchAll } from 'rxjs/operators';
+import {
+  catchError,
+  distinctUntilChanged,
+  filter,
+  map,
+  shareReplay,
+  startWith,
+  switchAll,
+} from 'rxjs/operators';
 import { View } from 'vega';
 import embed from 'vega-embed';
-
 
 export interface ViewLoading {
   type: 'loading';
@@ -22,30 +29,26 @@ export interface ViewError {
 
 export type ViewEvent = ViewLoading | ViewReady | ViewError;
 
-
 @Injectable()
 export class ViewManagerService implements OnDestroy {
   private readonly loader$ = new ReplaySubject<Observable<ViewEvent>>(1);
   private subscriptions = new Subscription();
 
-  readonly event$ = this.loader$.pipe(
-    switchAll(),
-    shareReplay(1)
-  );
+  readonly event$ = this.loader$.pipe(switchAll(), shareReplay(1));
 
   readonly view$ = this.event$.pipe(
     filter((event): event is ViewReady => event.type === 'ready'),
-    map(x => x.view)
+    map((x) => x.view)
   );
 
   readonly loading$ = this.event$.pipe(
-    map(event => event.type === 'loading'),
-    distinctUntilChanged(),
+    map((event) => event.type === 'loading'),
+    distinctUntilChanged()
   );
 
   readonly error$ = this.event$.pipe(
     filter((event): event is ViewError => event.type === 'error'),
-    map(x => x?.error)
+    map((x) => x?.error)
   );
 
   ngOnDestroy(): void {
@@ -56,12 +59,12 @@ export class ViewManagerService implements OnDestroy {
   create(...args: Parameters<typeof embed>): void {
     const loader = embed(...args);
     const subscriptions = this.subscriptions;
-    const teardown = () => loader.then(result => result.finalize());
+    const teardown = () => loader.then((result) => result.finalize());
     const subscription = new Subscription(teardown);
-    const viewLoader = loader.then(result => result.view);
+    const viewLoader = loader.then((result) => result.view);
     const observable = from(viewLoader).pipe(
-      map(view => ({ type: 'ready', view: view } as ViewReady)),
-      catchError(error => from([{ type: 'error', error } as ViewError])),
+      map((view) => ({ type: 'ready', view: view } as ViewReady)),
+      catchError((error) => from([{ type: 'error', error } as ViewError])),
       startWith({ type: 'loading', loader: viewLoader } as ViewLoading)
     );
 

@@ -1,5 +1,13 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnDestroy, Output, Renderer2,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  Renderer2,
   SimpleChanges,
 } from '@angular/core';
 import { ResizeSensor } from 'css-element-queries';
@@ -7,17 +15,14 @@ import { View } from 'vega';
 import { EmbedOptions, VisualizationSpec } from 'vega-embed';
 import { ViewEvent, ViewManagerService } from './view-manager.service';
 
-
 export type Spec = VisualizationSpec | string;
 export type Options = EmbedOptions;
 export type AutosizeObj = Record<'width' | 'height', boolean>;
 export type Autosize = boolean | Partial<AutosizeObj>;
 
-
 function empty() {
   // Intentionally empty
 }
-
 
 @Component({
   standalone: true,
@@ -25,7 +30,7 @@ function empty() {
   template: '',
   styleUrls: ['./vega.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ViewManagerService]
+  providers: [ViewManagerService],
 })
 export class VegaComponent implements OnChanges, OnDestroy {
   @Input() spec?: Spec;
@@ -33,9 +38,10 @@ export class VegaComponent implements OnChanges, OnDestroy {
 
   @Input()
   set autosize(value: Autosize) {
-    this._autosize = typeof value === 'boolean' ?
-      { width: value, height: value } :
-      { width: false, height: false, ...value };
+    this._autosize =
+      typeof value === 'boolean'
+        ? { width: value, height: value }
+        : { width: false, height: false, ...value };
   }
   get autosize(): Autosize {
     return this._autosize;
@@ -44,7 +50,7 @@ export class VegaComponent implements OnChanges, OnDestroy {
   private _autosize: AutosizeObj = {
     // Default to true for backwards compatibility
     width: true,
-    height: true
+    height: true,
   };
 
   @Input() minSizeChange = 1;
@@ -54,7 +60,9 @@ export class VegaComponent implements OnChanges, OnDestroy {
   @Output() viewError = this.manager.error$;
 
   private readonly container: HTMLElement;
-  private readonly subscriptions = this.manager.event$.subscribe(this.handleEvents.bind(this));
+  private readonly subscriptions = this.manager.event$.subscribe(
+    this.handleEvents.bind(this)
+  );
   private detach = empty;
 
   constructor(
@@ -116,10 +124,17 @@ export class VegaComponent implements OnChanges, OnDestroy {
     cdr.markForCheck();
   }
 
-  private updateSize(viewEl: HTMLElement, view: View, width: number, height: number): void {
+  private updateSize(
+    viewEl: HTMLElement,
+    view: View,
+    width: number,
+    height: number
+  ): void {
     const { _autosize: autosize } = this;
-    const widthChanged = autosize.width && this.updateWidth(viewEl, view, width);
-    const heightChanged = autosize.height && this.updateHeight(viewEl, view, height);
+    const widthChanged =
+      autosize.width && this.updateWidth(viewEl, view, width);
+    const heightChanged =
+      autosize.height && this.updateHeight(viewEl, view, height);
 
     if (widthChanged || heightChanged) {
       view.runAsync();
@@ -138,7 +153,11 @@ export class VegaComponent implements OnChanges, OnDestroy {
     return false;
   }
 
-  private updateHeight(_viewEl: HTMLElement, view: View, height: number): boolean {
+  private updateHeight(
+    _viewEl: HTMLElement,
+    view: View,
+    height: number
+  ): boolean {
     const { minSizeChange } = this;
     const diff = Math.abs(height - view.height());
     if (diff >= minSizeChange) {

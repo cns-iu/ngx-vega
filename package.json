@@ -1,6 +1,6 @@
 {
   "name": "ngx-vega",
-  "version": "0.52.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "build": "npm run ng -- build --configuration=production"
