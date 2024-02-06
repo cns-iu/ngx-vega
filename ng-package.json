@@ -3,5 +3,18 @@
   "dest": "../../dist/ngx-vega",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@angular/common",
+    "@angular/core",
+    "@angular-devkit/build-angular",
+    "@angular/cli",
+    "@angular/platform-browser-dynamic",
+    "css-element-queries",
+    "ng-packagr",
+    "tslib",
+    "vega-lite",
+    "vega",
+    "vega-embed"
+  ]
 }

@@ -1,6 +1,10 @@
 {
   "name": "ngx-vega",
   "version": "0.52.0",
+  "scripts": {
+    "ng": "ng",
+    "build": "npm run ng -- build --configuration=production"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -25,15 +29,18 @@
     "Adam Phillips <adphil@iu.edu> (https://github.com/adphillips2017)"
   ],
   "dependencies": {
+    "@angular/common": "^17.1.2",
+    "@angular/core": "^17.1.2",
     "@angular/platform-browser-dynamic": "^17.1.2",
     "css-element-queries": "^1.2.3",
     "tslib": "^2.6.2",
+    "vega-lite": "^5.16.3",
     "vega": "^5.27.0",
-    "vega-embed": "^6.24.0",
-    "vega-lite": "^5.16.3"
+    "vega-embed": "^6.24.0"
   },
-  "peerDependencies": {
-    "@angular/common": "^17.1.2",
-    "@angular/core": "^17.1.2"
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.1.2",
+    "@angular/cli": "^17.1.2",
+    "ng-packagr": "^17.1.2"
   }
 }
